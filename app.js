@@ -20,7 +20,6 @@
   // ─── Block Defaults ───────────────────────────────────
   const DEFAULTS = {
     header: () => ({
-      logo: "Your Organization",
       title: "Newsletter Title",
       date: "January 2025",
     }),
@@ -138,7 +137,6 @@
       case "header":
         wrap.className = "b-header";
         wrap.innerHTML =
-          `<div class="b-header-logo">${esc(d.logo)}</div>` +
           `<div class="b-header-title" contenteditable="true" data-field="title">${d.title}</div>` +
           `<div class="b-header-date" contenteditable="true" data-field="date">${d.date}</div>`;
         break;
@@ -828,10 +826,9 @@ ${bodyRows}
         return `
           <!-- HEADER -->
           <tr>
-            <td style="padding:32px 40px 28px 40px; border-bottom-width:2px; border-bottom-style:solid; border-bottom-color:#000000; font-family:${FONT} !important; mso-line-height-rule:exactly;">
-              <p style="margin:0 0 18px 0; font-family:${FONT} !important; font-size:13px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#000000; line-height:16px; mso-line-height-rule:exactly;">${esc(d.logo)}</p>
-              <h1 style="margin:0 0 8px 0; font-family:${FONT} !important; font-size:28px; font-weight:300; color:#000000; line-height:34px; mso-line-height-rule:exactly;">${exportRichText(d.title)}</h1>
-              <p style="margin:0; font-family:${FONT} !important; font-size:13px; color:#666666; line-height:18px; mso-line-height-rule:exactly;">${exportRichText(d.date)}</p>
+            <td style="padding:32px 40px 28px 40px; font-family:${FONT} !important; mso-line-height-rule:exactly;">
+              <h1 style="margin:0 0 8px 0; font-family:${FONT} !important; font-size:28px; font-weight:300; color:#000000; line-height:34px; mso-line-height-rule:exactly;">${exportRichText(d.title, 28)}</h1>
+              <p style="margin:0; font-family:${FONT} !important; font-size:13px; color:#666666; line-height:18px; mso-line-height-rule:exactly;">${exportRichText(d.date, 13)}</p>
             </td>
           </tr>`;
 
@@ -840,8 +837,8 @@ ${bodyRows}
           <!-- TEXT BLOCK -->
           <tr>
             <td style="padding:24px 40px; font-family:${FONT} !important; mso-line-height-rule:exactly;">
-              <h2 style="margin:0 0 10px 0; font-family:${FONT} !important; font-size:20px; font-weight:600; color:#000000; line-height:26px; mso-line-height-rule:exactly;">${exportRichText(d.heading)}</h2>
-              <p style="margin:0; font-family:${FONT} !important; font-size:15px; color:#333333; line-height:25px; mso-line-height-rule:exactly;">${exportRichText(d.body)}</p>
+              <h2 style="margin:0 0 10px 0; font-family:${FONT} !important; font-size:20px; font-weight:600; color:#000000; line-height:26px; mso-line-height-rule:exactly;">${exportRichText(d.heading, 20)}</h2>
+              <p style="margin:0; font-family:${FONT} !important; font-size:15px; color:#333333; line-height:25px; mso-line-height-rule:exactly;">${exportRichText(d.body, 15)}</p>
             </td>
           </tr>`;
 
@@ -850,7 +847,7 @@ ${bodyRows}
           <!-- HEADING -->
           <tr>
             <td style="padding:24px 40px 8px 40px; font-family:${FONT} !important; mso-line-height-rule:exactly;">
-              <h2 style="margin:0; font-family:${FONT} !important; font-size:22px; font-weight:600; color:#000000; line-height:28px; mso-line-height-rule:exactly;">${exportRichText(d.text)}</h2>
+              <h2 style="margin:0; font-family:${FONT} !important; font-size:22px; font-weight:600; color:#000000; line-height:28px; mso-line-height-rule:exactly;">${exportRichText(d.text, 22)}</h2>
             </td>
           </tr>`;
 
@@ -898,7 +895,7 @@ ${bodyRows}
           }
         }
         const captionRow = d.caption
-          ? `<p style="margin:8px 0 0 0; font-family:${FONT} !important; font-size:12px; color:#666666; line-height:18px; font-style:italic; mso-line-height-rule:exactly;">${exportRichText(d.caption)}</p>`
+          ? `<p style="margin:8px 0 0 0; font-family:${FONT} !important; font-size:12px; color:#666666; line-height:18px; font-style:italic; mso-line-height-rule:exactly;">${exportRichText(d.caption, 12)}</p>`
           : "";
         return `
           <!-- IMAGE -->
@@ -923,8 +920,8 @@ ${bodyRows}
               <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="255" align="left" style="${MSO_FIX}">
                 <tr>
                   <td valign="top" style="padding:10px; font-family:${FONT} !important; mso-line-height-rule:exactly;">
-                    <h3 style="margin:0 0 8px 0; font-family:${FONT} !important; font-size:17px; font-weight:600; color:#000000; line-height:22px; mso-line-height-rule:exactly;">${exportRichText(d.leftHeading)}</h3>
-                    <p style="margin:0; font-family:${FONT} !important; font-size:14px; color:#333333; line-height:22px; mso-line-height-rule:exactly;">${exportRichText(d.leftBody)}</p>
+                    <h3 style="margin:0 0 8px 0; font-family:${FONT} !important; font-size:17px; font-weight:600; color:#000000; line-height:22px; mso-line-height-rule:exactly;">${exportRichText(d.leftHeading, 17)}</h3>
+                    <p style="margin:0; font-family:${FONT} !important; font-size:14px; color:#333333; line-height:22px; mso-line-height-rule:exactly;">${exportRichText(d.leftBody, 14)}</p>
                   </td>
                 </tr>
               </table>
@@ -936,8 +933,8 @@ ${bodyRows}
               <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="255" align="right" style="${MSO_FIX}">
                 <tr>
                   <td valign="top" style="padding:10px; font-family:${FONT} !important; mso-line-height-rule:exactly;">
-                    <h3 style="margin:0 0 8px 0; font-family:${FONT} !important; font-size:17px; font-weight:600; color:#000000; line-height:22px; mso-line-height-rule:exactly;">${exportRichText(d.rightHeading)}</h3>
-                    <p style="margin:0; font-family:${FONT} !important; font-size:14px; color:#333333; line-height:22px; mso-line-height-rule:exactly;">${exportRichText(d.rightBody)}</p>
+                    <h3 style="margin:0 0 8px 0; font-family:${FONT} !important; font-size:17px; font-weight:600; color:#000000; line-height:22px; mso-line-height-rule:exactly;">${exportRichText(d.rightHeading, 17)}</h3>
+                    <p style="margin:0; font-family:${FONT} !important; font-size:14px; color:#333333; line-height:22px; mso-line-height-rule:exactly;">${exportRichText(d.rightBody, 14)}</p>
                   </td>
                 </tr>
               </table>
@@ -961,12 +958,12 @@ ${bodyRows}
               <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="${MSO_FIX}">
                 <tr>
                   <td width="64" valign="top" align="center" style="width:64px; border-width:2px; border-style:solid; border-color:#000000; padding:8px 4px; font-family:${FONT} !important; mso-line-height-rule:exactly;">
-                    <p style="margin:0; font-family:${FONT} !important; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:#000000; line-height:14px; mso-line-height-rule:exactly;">${exportRichText(d.month)}</p>
-                    <p style="margin:0; font-family:${FONT} !important; font-size:28px; font-weight:300; color:#000000; line-height:32px; mso-line-height-rule:exactly;">${exportRichText(d.day)}</p>
+                    <p style="margin:0; font-family:${FONT} !important; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:#000000; line-height:14px; mso-line-height-rule:exactly;">${exportRichText(d.month, 11)}</p>
+                    <p style="margin:0; font-family:${FONT} !important; font-size:28px; font-weight:300; color:#000000; line-height:32px; mso-line-height-rule:exactly;">${exportRichText(d.day, 28)}</p>
                   </td>
                   <td valign="top" style="padding-left:20px; font-family:${FONT} !important; mso-line-height-rule:exactly;">
-                    <h3 style="margin:0 0 6px 0; font-family:${FONT} !important; font-size:17px; font-weight:600; color:#000000; line-height:22px; mso-line-height-rule:exactly;">${exportRichText(d.title)}</h3>
-                    <p style="margin:0; font-family:${FONT} !important; font-size:14px; color:#333333; line-height:22px; mso-line-height-rule:exactly;">${exportRichText(d.desc)}</p>
+                    <h3 style="margin:0 0 6px 0; font-family:${FONT} !important; font-size:17px; font-weight:600; color:#000000; line-height:22px; mso-line-height-rule:exactly;">${exportRichText(d.title, 17)}</h3>
+                    <p style="margin:0; font-family:${FONT} !important; font-size:14px; color:#333333; line-height:22px; mso-line-height-rule:exactly;">${exportRichText(d.desc, 14)}</p>
                   </td>
                 </tr>
               </table>
@@ -982,8 +979,8 @@ ${bodyRows}
                 <tr>
                   <td width="3" style="background-color:#000000; width:3px; font-size:1px; line-height:1px; mso-line-height-rule:exactly;">&nbsp;</td>
                   <td style="padding:12px 20px; font-family:${FONT} !important; mso-line-height-rule:exactly;">
-                    <p style="margin:0; font-family:${FONT} !important; font-size:16px; color:#333333; line-height:26px; font-style:italic; mso-line-height-rule:exactly;">${exportRichText(d.text)}</p>
-                    <p style="margin:8px 0 0 0; font-family:${FONT} !important; font-size:13px; color:#666666; line-height:18px; mso-line-height-rule:exactly;">${exportRichText(d.attribution)}</p>
+                    <p style="margin:0; font-family:${FONT} !important; font-size:16px; color:#333333; line-height:26px; font-style:italic; mso-line-height-rule:exactly;">${exportRichText(d.text, 16)}</p>
+                    <p style="margin:8px 0 0 0; font-family:${FONT} !important; font-size:13px; color:#666666; line-height:18px; mso-line-height-rule:exactly;">${exportRichText(d.attribution, 13)}</p>
                   </td>
                 </tr>
               </table>
@@ -998,7 +995,7 @@ ${bodyRows}
               <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="${MSO_FIX}">
                 <tr>
                   <td align="center" style="background-color:#000000; padding:12px 32px; font-family:${FONT} !important; mso-line-height-rule:exactly;">
-                    <a href="${escAttr(d.url)}" target="_blank" style="font-family:${FONT} !important; font-size:14px; font-weight:500; color:#ffffff; text-decoration:none; letter-spacing:0.5px; mso-line-height-rule:exactly;">${exportRichText(d.label)}</a>
+                    <a href="${escAttr(d.url)}" target="_blank" style="font-family:${FONT} !important; font-size:14px; font-weight:500; color:#ffffff; text-decoration:none; letter-spacing:0.5px; mso-line-height-rule:exactly;">${exportRichText(d.label, 14)}</a>
                   </td>
                 </tr>
               </table>
@@ -1009,7 +1006,7 @@ ${bodyRows}
         const imgSize = d.size || 32;
         const svgUrl = "https://cdn.jsdelivr.net/npm/@phosphor-icons/core@2.1.1/assets/regular/" + encodeURIComponent(d.name) + ".svg";
         const labelHtml = d.label
-          ? `\n              <p style="margin:8px 0 0 0; font-family:${FONT} !important; font-size:13px; color:#333333; line-height:18px; mso-line-height-rule:exactly;">${exportRichText(d.label)}</p>`
+          ? `\n              <p style="margin:8px 0 0 0; font-family:${FONT} !important; font-size:13px; color:#333333; line-height:18px; mso-line-height-rule:exactly;">${exportRichText(d.label, 13)}</p>`
           : "";
         return `
           <!-- ICON: ${esc(d.name)} -->
@@ -1024,9 +1021,9 @@ ${bodyRows}
         return `
           <!-- FOOTER -->
           <tr>
-            <td style="padding:28px 40px; border-top-width:1px; border-top-style:solid; border-top-color:#000000; font-family:${FONT} !important; mso-line-height-rule:exactly;">
-              <p style="margin:0 0 8px 0; font-family:${FONT} !important; font-size:13px; font-weight:700; color:#000000; letter-spacing:1px; line-height:18px; mso-line-height-rule:exactly;">${exportRichText(d.org)}</p>
-              <p style="margin:0; font-family:${FONT} !important; font-size:12px; color:#666666; line-height:20px; mso-line-height-rule:exactly;">${exportRichText(d.details)}</p>
+            <td style="padding:28px 40px; font-family:${FONT} !important; mso-line-height-rule:exactly;">
+              <p style="margin:0 0 8px 0; font-family:${FONT} !important; font-size:13px; font-weight:700; color:#000000; letter-spacing:1px; line-height:18px; mso-line-height-rule:exactly;">${exportRichText(d.org, 13)}</p>
+              <p style="margin:0; font-family:${FONT} !important; font-size:12px; color:#666666; line-height:20px; mso-line-height-rule:exactly;">${exportRichText(d.details, 12)}</p>
             </td>
           </tr>`;
 
@@ -1090,8 +1087,9 @@ ${bodyRows}
   // ─── Utility: Convert rich text HTML for email export ─
   // Converts inline Phosphor <i> tags to <img> tags pointing
   // to the CDN SVG. Normalizes <br> to <br />.
-  function exportRichText(html) {
+  function exportRichText(html, fontSize) {
     if (!html) return "";
+    var iconSize = Math.round((fontSize || 15) * 1.15);
     return html
       .replace(/<i class="ph ph-([\w-]+)"><\/i>/g, function (match, name) {
         var svgUrl =
@@ -1101,9 +1099,9 @@ ${bodyRows}
         return (
           '<img src="' +
           svgUrl +
-          '" width="18" height="18" alt="' +
+          '" width="' + iconSize + '" height="' + iconSize + '" alt="' +
           esc(name) +
-          '" style="display:inline; vertical-align:middle; width:18px; height:18px;" />'
+          '" style="display:inline; vertical-align:-0.125em; width:' + iconSize + 'px; height:' + iconSize + 'px; margin:0 1px;" />'
         );
       })
       .replace(/<br>/g, "<br />");

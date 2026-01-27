@@ -368,16 +368,6 @@ body {
 /* --- Block Type: Header --- */
 .b-header {
   padding: 32px 40px 28px;
-  border-bottom: 2px solid #000;
-}
-
-.b-header-logo {
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #000;
-  margin-bottom: 20px;
 }
 
 .b-header-title {
@@ -805,7 +795,6 @@ body {
 /* --- Block Type: Footer --- */
 .b-footer {
   padding: 28px 40px;
-  border-top: 1px solid #000;
 }
 
 .b-footer-org {
@@ -1036,7 +1025,7 @@ body {
 /* --- Inline icons in contenteditable fields --- */
 [contenteditable] i.ph {
   display: inline-block;
-  vertical-align: middle;
+  vertical-align: -0.125em;
   font-size: 1.15em;
   line-height: 1;
   font-style: normal;
