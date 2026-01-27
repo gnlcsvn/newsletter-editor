@@ -1,0 +1,1104 @@
+/* ========================================================
+   Newsletter Editor — Styles
+   ======================================================== */
+
+/* --- Reset & Base --- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #000;
+  background: #f5f5f5;
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* --- Top Bar --- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  padding: 0 24px;
+  background: #000;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.topbar-logo {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.topbar-title {
+  font-size: 14px;
+  font-weight: 400;
+  color: #999;
+  letter-spacing: 0.01em;
+}
+
+.topbar-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* --- Buttons --- */
+.btn {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  padding: 7px 16px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn i {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.btn--primary {
+  background: #000;
+  color: #fff;
+  border: 1px solid #000;
+}
+
+.btn--primary:hover {
+  background: #333;
+  border-color: #333;
+}
+
+.btn--outline {
+  background: transparent;
+  color: #fff;
+  border: 1px solid #555;
+}
+
+.btn--outline:hover {
+  border-color: #fff;
+}
+
+.btn--sm {
+  padding: 5px 12px;
+  font-size: 12px;
+}
+
+.btn--dark {
+  background: #000;
+  color: #fff;
+  border: 1px solid #000;
+}
+
+.btn--dark:hover {
+  background: #222;
+}
+
+/* --- Layout --- */
+.layout {
+  display: flex;
+  height: calc(100vh - 56px);
+}
+
+/* --- Sidebar --- */
+.sidebar {
+  width: 220px;
+  min-width: 220px;
+  background: #fff;
+  border-right: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* --- Sidebar Tabs --- */
+.sidebar-tabs {
+  display: flex;
+  border-bottom: 1px solid #e0e0e0;
+  flex-shrink: 0;
+}
+
+.sidebar-tab {
+  flex: 1;
+  padding: 12px 8px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #999;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.sidebar-tab i {
+  font-size: 14px;
+}
+
+.sidebar-tab:hover {
+  color: #666;
+}
+
+.sidebar-tab.active {
+  color: #000;
+  border-bottom-color: #000;
+}
+
+/* --- Sidebar Panels --- */
+.sidebar-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.sidebar-panel.hidden {
+  display: none;
+}
+
+.block-palette {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 8px;
+}
+
+.palette-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  color: #333;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.12s;
+  text-align: left;
+}
+
+.palette-item:hover {
+  background: #f0f0f0;
+}
+
+.palette-item i {
+  font-size: 20px;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+  color: #666;
+  line-height: 1;
+}
+
+.palette-item:hover i {
+  color: #000;
+}
+
+.sidebar-tip {
+  margin-top: auto;
+  padding: 16px;
+  font-size: 11px;
+  color: #999;
+  line-height: 1.5;
+  border-top: 1px solid #e0e0e0;
+}
+
+/* --- Canvas Area --- */
+.canvas-wrap {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+  background: #eee;
+}
+
+.canvas-outer {
+  width: 640px;
+  min-height: 600px;
+  position: relative;
+}
+
+.canvas {
+  width: 640px;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  position: relative;
+  min-height: 200px;
+}
+
+/* --- Empty State --- */
+.empty-state {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #bbb;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.empty-state.hidden {
+  display: none;
+}
+
+.empty-state-icon {
+  font-size: 48px;
+  font-weight: 200;
+  margin-bottom: 8px;
+  color: #ccc;
+}
+
+/* ========================================================
+   BLOCK STYLES (Editor Canvas)
+   ======================================================== */
+
+.block {
+  position: relative;
+  border: 2px solid transparent;
+  transition: border-color 0.12s;
+  cursor: default;
+}
+
+.block:hover {
+  border-color: #ccc;
+}
+
+.block.selected {
+  border-color: #000;
+}
+
+.block.drag-over-top::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #000;
+  z-index: 5;
+}
+
+.block.drag-over-bottom::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #000;
+  z-index: 5;
+}
+
+/* Block toolbar */
+.block-toolbar {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: none;
+  gap: 2px;
+  z-index: 10;
+  background: #000;
+  padding: 3px;
+  border-radius: 3px;
+}
+
+.block:hover .block-toolbar,
+.block.selected .block-toolbar {
+  display: flex;
+}
+
+.block-toolbar button {
+  width: 26px;
+  height: 26px;
+  border: none;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  font-family: inherit;
+}
+
+.block-toolbar button:hover {
+  background: #444;
+}
+
+.block-toolbar button i {
+  font-size: 14px;
+  color: #fff;
+  line-height: 1;
+}
+
+/* --- Block Type: Header --- */
+.b-header {
+  padding: 32px 40px 28px;
+  border-bottom: 2px solid #000;
+}
+
+.b-header-logo {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #000;
+  margin-bottom: 20px;
+}
+
+.b-header-title {
+  font-size: 28px;
+  font-weight: 300;
+  color: #000;
+  line-height: 1.2;
+  margin-bottom: 8px;
+  outline: none;
+  min-height: 34px;
+}
+
+.b-header-date {
+  font-size: 13px;
+  color: #666;
+  letter-spacing: 0.02em;
+  outline: none;
+  min-height: 18px;
+}
+
+/* --- Block Type: Text --- */
+.b-text {
+  padding: 24px 40px;
+}
+
+.b-text-heading {
+  font-size: 20px;
+  font-weight: 600;
+  color: #000;
+  line-height: 1.3;
+  margin-bottom: 10px;
+  outline: none;
+  min-height: 26px;
+}
+
+.b-text-body {
+  font-size: 15px;
+  color: #333;
+  line-height: 1.65;
+  outline: none;
+  min-height: 24px;
+}
+
+/* --- Block Type: Heading --- */
+.b-heading {
+  padding: 24px 40px 8px;
+}
+
+.b-heading-text {
+  font-size: 22px;
+  font-weight: 600;
+  color: #000;
+  line-height: 1.3;
+  outline: none;
+  min-height: 28px;
+}
+
+/* --- Block Type: Divider --- */
+.b-divider {
+  padding: 8px 40px;
+}
+
+.b-divider-line {
+  border: none;
+  border-top: 1px solid #000;
+}
+
+/* --- Block Type: Spacer --- */
+.b-spacer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.b-spacer-inner {
+  height: 40px;
+  width: 100%;
+}
+
+.b-spacer-label {
+  position: absolute;
+  font-size: 10px;
+  color: #ccc;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  pointer-events: none;
+}
+
+.block:hover .b-spacer-label {
+  color: #999;
+}
+
+/* --- Block Type: Image --- */
+.b-image {
+  padding: 24px 40px;
+}
+
+.b-image-dropzone {
+  width: 100%;
+  min-height: 160px;
+  background: #f5f5f5;
+  border: 2px dashed #ccc;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #999;
+  font-size: 13px;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.b-image-dropzone i {
+  font-size: 36px;
+  color: #ccc;
+}
+
+.b-image-dropzone:hover {
+  border-color: #999;
+  background: #f0f0f0;
+}
+
+.b-image-dropzone.drag-over {
+  border-color: #000;
+  background: #e8e8e8;
+}
+
+.b-image-pick-btn {
+  padding: 6px 16px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  background: #000;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+}
+
+.b-image-pick-btn:hover {
+  background: #333;
+}
+
+.b-image-file-input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.b-image-crop-container {
+  width: 100%;
+  position: relative;
+  background: #f0f0f0;
+}
+
+.b-image-crop-container.drag-over {
+  outline: 2px solid #000;
+  outline-offset: -2px;
+}
+
+.b-image-preview {
+  width: 100%;
+  display: block;
+}
+
+.b-image-crop-handle {
+  height: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: ns-resize;
+  background: #f5f5f5;
+  transition: background 0.12s;
+}
+
+.b-image-crop-handle:hover {
+  background: #e0e0e0;
+}
+
+.b-image-crop-handle-bar {
+  width: 32px;
+  height: 3px;
+  background: #ccc;
+  border-radius: 2px;
+}
+
+.b-image-crop-handle:hover .b-image-crop-handle-bar {
+  background: #999;
+}
+
+.b-image-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.b-image-control-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.b-image-control-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.b-image-control-unit {
+  font-size: 10px;
+  color: #999;
+}
+
+.b-image-crop-input {
+  width: 56px;
+  padding: 3px 6px;
+  font-family: inherit;
+  font-size: 12px;
+  border: 1px solid #ddd;
+  outline: none;
+  text-align: center;
+}
+
+.b-image-crop-input:focus {
+  border-color: #000;
+}
+
+.b-image-range {
+  width: 80px;
+  accent-color: #000;
+}
+
+.b-image-replace-btn,
+.b-image-remove-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  color: #666;
+  font-size: 14px;
+  padding: 0;
+  transition: border-color 0.12s, color 0.12s;
+}
+
+.b-image-replace-btn:hover,
+.b-image-remove-btn:hover {
+  border-color: #000;
+  color: #000;
+}
+
+.b-image-caption {
+  font-size: 12px;
+  color: #666;
+  margin-top: 8px;
+  outline: none;
+  min-height: 16px;
+  font-style: italic;
+}
+
+/* --- Block Type: Two Columns --- */
+.b-twocol {
+  padding: 24px 40px;
+  display: flex;
+  gap: 24px;
+}
+
+.b-twocol-col {
+  flex: 1;
+  min-width: 0;
+}
+
+.b-twocol-heading {
+  font-size: 17px;
+  font-weight: 600;
+  color: #000;
+  line-height: 1.3;
+  margin-bottom: 8px;
+  outline: none;
+  min-height: 22px;
+}
+
+.b-twocol-body {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.6;
+  outline: none;
+  min-height: 20px;
+}
+
+/* --- Block Type: Event --- */
+.b-event {
+  padding: 20px 40px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.b-event-date {
+  width: 64px;
+  min-width: 64px;
+  text-align: center;
+  border: 2px solid #000;
+  padding: 8px 4px;
+  flex-shrink: 0;
+}
+
+.b-event-month {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #000;
+  outline: none;
+}
+
+.b-event-day {
+  font-size: 28px;
+  font-weight: 300;
+  color: #000;
+  line-height: 1.1;
+  outline: none;
+}
+
+.b-event-content {
+  flex: 1;
+}
+
+.b-event-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 6px;
+  outline: none;
+  min-height: 22px;
+}
+
+.b-event-desc {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.6;
+  outline: none;
+  min-height: 20px;
+}
+
+/* --- Block Type: Quote --- */
+.b-quote {
+  padding: 20px 40px;
+}
+
+.b-quote-inner {
+  border-left: 3px solid #000;
+  padding: 12px 20px;
+}
+
+.b-quote-text {
+  font-size: 16px;
+  color: #333;
+  line-height: 1.6;
+  font-style: italic;
+  outline: none;
+  min-height: 24px;
+}
+
+.b-quote-attr {
+  font-size: 13px;
+  color: #666;
+  margin-top: 8px;
+  font-style: normal;
+  outline: none;
+  min-height: 18px;
+}
+
+/* --- Block Type: Button --- */
+.b-button {
+  padding: 20px 40px;
+  text-align: center;
+}
+
+.b-button-link {
+  display: inline-block;
+  background: #000;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 12px 32px;
+  text-decoration: none;
+  letter-spacing: 0.03em;
+  outline: none;
+  min-width: 120px;
+  border: none;
+  cursor: text;
+}
+
+.b-button-url {
+  display: block;
+  width: 280px;
+  margin: 10px auto 0;
+  padding: 6px 10px;
+  font-family: inherit;
+  font-size: 12px;
+  border: 1px solid #ddd;
+  text-align: center;
+  outline: none;
+  color: #999;
+}
+
+.b-button-url:focus {
+  border-color: #000;
+  color: #000;
+}
+
+/* --- Block Type: Footer --- */
+.b-footer {
+  padding: 28px 40px;
+  border-top: 1px solid #000;
+}
+
+.b-footer-org {
+  font-size: 13px;
+  font-weight: 700;
+  color: #000;
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+  outline: none;
+  min-height: 18px;
+}
+
+.b-footer-details {
+  font-size: 12px;
+  color: #666;
+  line-height: 1.7;
+  outline: none;
+  min-height: 20px;
+}
+
+/* ========================================================
+   MODAL
+   ======================================================== */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-overlay.hidden {
+  display: none;
+}
+
+.modal {
+  background: #fff;
+  width: 700px;
+  max-width: 90vw;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.modal-header h3 {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.modal-header .btn--outline {
+  color: #000;
+  border-color: #ccc;
+}
+
+.modal-header .btn--outline:hover {
+  border-color: #000;
+}
+
+.modal-code {
+  flex: 1;
+  padding: 16px 20px;
+  font-family: "SF Mono", "Fira Code", "Fira Mono", Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  border: none;
+  resize: none;
+  outline: none;
+  color: #333;
+  background: #fafafa;
+}
+
+.modal-actions {
+  padding: 12px 20px;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ========================================================
+   TOAST
+   ======================================================== */
+
+.toast {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #000;
+  color: #fff;
+  padding: 10px 24px;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 200;
+  transition: opacity 0.3s;
+}
+
+.toast.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.toast.visible {
+  opacity: 1;
+}
+
+/* ========================================================
+   ICON PICKER
+   ======================================================== */
+
+.icon-picker-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 12px 8px;
+  flex-shrink: 0;
+}
+
+.icon-picker-search i {
+  color: #999;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.icon-picker-search input {
+  flex: 1;
+  border: none;
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+  padding: 4px 0;
+  background: transparent;
+  color: #000;
+}
+
+.icon-picker-search input::placeholder {
+  color: #bbb;
+}
+
+.icon-picker-options {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 8px;
+  border-bottom: 1px solid #f0f0f0;
+  flex-shrink: 0;
+}
+
+.icon-picker-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.icon-picker-options select {
+  font-family: inherit;
+  font-size: 12px;
+  padding: 3px 6px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  background: #fff;
+  color: #333;
+  outline: none;
+  cursor: pointer;
+}
+
+.icon-picker-options select:focus {
+  border-color: #000;
+}
+
+.icon-grid {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
+  gap: 2px;
+  align-content: start;
+}
+
+.icon-grid-item {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.1s, color 0.1s;
+  color: #555;
+  font-size: 22px;
+  padding: 0;
+}
+
+.icon-grid-item:hover {
+  background: #f0f0f0;
+  color: #000;
+}
+
+.icon-grid-item.selected {
+  background: #000;
+  color: #fff;
+}
+
+.icon-status {
+  padding: 8px 12px;
+  font-size: 11px;
+  color: #999;
+  border-top: 1px solid #f0f0f0;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+/* --- Inline icons in contenteditable fields --- */
+[contenteditable] i.ph {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 1.15em;
+  line-height: 1;
+  font-style: normal;
+  margin: 0 1px;
+}
+
+/* --- Block Type: Icon --- */
+.b-icon {
+  padding: 24px 40px;
+  text-align: center;
+}
+
+.b-icon-preview {
+  color: #000;
+  line-height: 1;
+}
+
+.b-icon-name {
+  font-size: 10px;
+  color: #bbb;
+  margin-top: 6px;
+  letter-spacing: 0.03em;
+  font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+}
+
+.b-icon-label {
+  font-size: 14px;
+  color: #333;
+  margin-top: 4px;
+  outline: none;
+  min-height: 18px;
+}
+
+/* ========================================================
+   DRAG & DROP
+   ======================================================== */
+
+.block[draggable="true"] {
+  cursor: grab;
+}
+
+.block.dragging {
+  opacity: 0.4;
+}
+
+/* ========================================================
+   RESPONSIVE
+   ======================================================== */
+
+@media (max-width: 960px) {
+  .sidebar {
+    width: 180px;
+    min-width: 180px;
+  }
+
+  .canvas-outer,
+  .canvas {
+    width: 100%;
+    max-width: 640px;
+  }
+
+  .canvas-wrap {
+    padding: 20px 10px;
+  }
+}

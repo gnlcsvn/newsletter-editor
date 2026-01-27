@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Newsletter Editor</title>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css" />
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css" />
+  <link rel="stylesheet" href="editor.css" />
+</head>
+<body>
+
+  <!-- ===== TOP BAR ===== -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-logo">Newsletter Editor</span>
+    </div>
+    <div class="topbar-actions">
+      <button id="btn-preview" class="btn btn--outline" title="Preview in new tab"><i class="ph ph-eye"></i> Preview</button>
+      <button id="btn-copy" class="btn btn--outline" title="Copy HTML to clipboard"><i class="ph ph-clipboard-text"></i> Copy HTML</button>
+      <button id="btn-download" class="btn btn--primary" title="Download .html file"><i class="ph ph-download-simple"></i> Download</button>
+    </div>
+  </header>
+
+  <!-- ===== MAIN LAYOUT ===== -->
+  <div class="layout">
+
+    <!-- Sidebar: Block Palette -->
+    <aside class="sidebar">
+      <div class="sidebar-tabs">
+        <button class="sidebar-tab active" data-panel="blocks">Blocks</button>
+        <button class="sidebar-tab" data-panel="icons"><i class="ph ph-compass"></i> Icons</button>
+      </div>
+
+      <!-- Blocks Panel -->
+      <div class="sidebar-panel" id="panel-blocks">
+        <div class="block-palette">
+          <button class="palette-item" data-type="header" title="Newsletter header with logo and date">
+            <i class="ph ph-newspaper"></i>
+            <span>Header</span>
+          </button>
+          <button class="palette-item" data-type="text" title="Heading + paragraph text block">
+            <i class="ph ph-article"></i>
+            <span>Text</span>
+          </button>
+          <button class="palette-item" data-type="heading" title="Standalone heading">
+            <i class="ph ph-text-h"></i>
+            <span>Heading</span>
+          </button>
+          <button class="palette-item" data-type="divider" title="Thin horizontal rule">
+            <i class="ph ph-minus"></i>
+            <span>Divider</span>
+          </button>
+          <button class="palette-item" data-type="spacer" title="Empty vertical space">
+            <i class="ph ph-arrows-out-line-vertical"></i>
+            <span>Spacer</span>
+          </button>
+          <button class="palette-item" data-type="image" title="Image with optional caption">
+            <i class="ph ph-image"></i>
+            <span>Image</span>
+          </button>
+          <button class="palette-item" data-type="twocol" title="Two columns side by side">
+            <i class="ph ph-columns"></i>
+            <span>2 Columns</span>
+          </button>
+          <button class="palette-item" data-type="event" title="Date badge with event details">
+            <i class="ph ph-calendar-blank"></i>
+            <span>Event</span>
+          </button>
+          <button class="palette-item" data-type="quote" title="Left-bordered highlight block">
+            <i class="ph ph-quotes"></i>
+            <span>Quote</span>
+          </button>
+          <button class="palette-item" data-type="button" title="Call-to-action button">
+            <i class="ph ph-cursor-click"></i>
+            <span>Button</span>
+          </button>
+          <button class="palette-item" data-type="footer" title="Footer with institution info">
+            <i class="ph ph-list-dashes"></i>
+            <span>Footer</span>
+          </button>
+        </div>
+        <div class="sidebar-tip">
+          Click a block to add it to the canvas. Drag blocks to reorder. Click text to edit inline.
+        </div>
+      </div>
+
+      <!-- Icons Panel -->
+      <div class="sidebar-panel hidden" id="panel-icons">
+        <div class="icon-picker-search">
+          <i class="ph ph-magnifying-glass"></i>
+          <input id="icon-search" type="text" placeholder="Search icons..." autocomplete="off" />
+        </div>
+        <div class="icon-picker-options">
+          <label class="icon-picker-label">Size</label>
+          <select id="icon-size">
+            <option value="24">24 px</option>
+            <option value="32" selected>32 px</option>
+            <option value="48">48 px</option>
+            <option value="64">64 px</option>
+          </select>
+        </div>
+        <div id="icon-grid" class="icon-grid"></div>
+        <div id="icon-status" class="icon-status">Click this tab to load icons</div>
+      </div>
+    </aside>
+
+    <!-- Canvas -->
+    <main class="canvas-wrap">
+      <div class="canvas-outer">
+        <div id="canvas" class="canvas">
+          <!-- Blocks are rendered here by JS -->
+        </div>
+        <div id="empty-state" class="empty-state">
+          <p class="empty-state-icon"><i class="ph ph-plus"></i></p>
+          <p>Add blocks from the sidebar to start building your newsletter</p>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <!-- ===== HTML PREVIEW MODAL ===== -->
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Generated HTML</h3>
+        <button id="modal-close" class="btn btn--outline btn--sm">Close</button>
+      </div>
+      <textarea id="modal-code" class="modal-code" readonly></textarea>
+      <div class="modal-actions">
+        <button id="modal-copy" class="btn btn--primary">Copy to Clipboard</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast hidden">Copied to clipboard</div>
+
+  <script src="app.js"></script>
+</body>
+</html>
