@@ -137,6 +137,38 @@
   <!-- Toast notification -->
   <div id="toast" class="toast hidden">Copied to clipboard</div>
 
+  <!-- ===== FORMAT TOOLBAR ===== -->
+  <div id="format-toolbar" class="format-toolbar" style="display:none;">
+    <div class="format-size-wrap">
+      <button id="format-size-btn" class="format-size-btn" title="Text size">
+        <span id="format-size-label">Normal</span>
+        <i class="ph ph-caret-down" style="font-size:10px;"></i>
+      </button>
+      <div id="format-size-menu" class="format-size-menu" style="display:none;">
+        <button data-size="6" class="format-size-option size-h1">H1</button>
+        <button data-size="5" class="format-size-option size-h2">H2</button>
+        <button data-size="4" class="format-size-option size-h3">H3</button>
+        <button data-size="3" class="format-size-option size-normal">Normal</button>
+        <button data-size="2" class="format-size-option size-small">Small</button>
+        <button data-size="1" class="format-size-option size-tiny">Tiny</button>
+      </div>
+    </div>
+    <span class="format-toolbar-sep"></span>
+    <button data-command="bold" title="Bold (Ctrl+B)"><i class="ph-bold ph-text-b"></i></button>
+    <button data-command="italic" title="Italic (Ctrl+I)"><i class="ph-bold ph-text-italic"></i></button>
+    <button data-command="underline" title="Underline (Ctrl+U)"><i class="ph-bold ph-text-underline"></i></button>
+    <button data-command="strikeThrough" title="Strikethrough"><i class="ph-bold ph-text-strikethrough"></i></button>
+    <span class="format-toolbar-sep"></span>
+    <button data-command="link" title="Link (Ctrl+K)"><i class="ph-bold ph-link"></i></button>
+  </div>
+
+  <!-- ===== LINK POPOVER ===== -->
+  <div id="link-popover" class="link-popover" style="display:none;">
+    <input id="link-popover-input" type="text" placeholder="https://..." />
+    <button id="link-popover-apply" class="btn btn--dark btn--sm">Apply</button>
+    <button id="link-popover-remove" class="btn btn--sm" style="color:#c00; border:1px solid #ddd;">Remove</button>
+  </div>
+
   <script src="app.js"></script>
 </body>
 </html>

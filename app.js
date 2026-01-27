@@ -17,6 +17,22 @@
   const canvas = document.getElementById("canvas");
   const emptyState = document.getElementById("empty-state");
 
+  // Format toolbar elements
+  const formatToolbar = document.getElementById("format-toolbar");
+  const linkPopover = document.getElementById("link-popover");
+  const linkPopoverInput = document.getElementById("link-popover-input");
+  const linkPopoverApply = document.getElementById("link-popover-apply");
+  const linkPopoverRemove = document.getElementById("link-popover-remove");
+  let savedSelectionRange = null;
+
+  // Size dropdown elements
+  const formatSizeBtn = document.getElementById("format-size-btn");
+  const formatSizeLabel = document.getElementById("format-size-label");
+  const formatSizeMenu = document.getElementById("format-size-menu");
+
+  const SIZE_LABELS = { "1": "Tiny", "2": "Small", "3": "Normal", "4": "H3", "5": "H2", "6": "H1" };
+  const SIZE_PX = { "1": 10, "2": 13, "3": 16, "4": 18, "5": 24, "6": 32 };
+
   // ─── Block Defaults ───────────────────────────────────
   const DEFAULTS = {
     header: () => ({
@@ -24,8 +40,7 @@
       date: "January 2025",
     }),
     text: () => ({
-      heading: "Section Heading",
-      body: "Write your paragraph text here. Click to edit this content and replace it with your newsletter copy.",
+      body: '<font size="4"><b>Section Heading</b></font><br>Write your paragraph text here. Click to edit this content and replace it with your newsletter copy.',
     }),
     heading: () => ({
       text: "Section Heading",
@@ -95,6 +110,7 @@
   function render() {
     // Sync data from DOM before re-render
     syncAllData();
+    hideFormatToolbar();
 
     canvas.innerHTML = "";
     emptyState.classList.toggle("hidden", blocks.length > 0);
@@ -144,7 +160,6 @@
       case "text":
         wrap.className = "b-text";
         wrap.innerHTML =
-          `<div class="b-text-heading" contenteditable="true" data-field="heading">${d.heading}</div>` +
           `<div class="b-text-body" contenteditable="true" data-field="body">${d.body}</div>`;
         break;
 
@@ -546,6 +561,241 @@
       lastRange = sel.getRangeAt(0).cloneRange();
       lastEditableField = field;
     }
+    updateFormatToolbar();
+  });
+
+  // ─── Format Toolbar: show/hide + positioning ────────
+  function updateFormatToolbar() {
+    // Don't hide toolbar while link popover or size menu is open
+    if (linkPopover.style.display !== "none" || formatSizeMenu.style.display !== "none") {
+      return;
+    }
+
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed || sel.rangeCount === 0) {
+      hideFormatToolbar();
+      return;
+    }
+    const anchor = sel.anchorNode;
+    if (!anchor) { hideFormatToolbar(); return; }
+    const el = anchor.nodeType === Node.TEXT_NODE ? anchor.parentElement : anchor;
+    const field = el && el.closest ? el.closest('[contenteditable="true"]') : null;
+    if (!field || !canvas.contains(field)) {
+      hideFormatToolbar();
+      return;
+    }
+    // Position toolbar centered above selection
+    const range = sel.getRangeAt(0);
+    const rect = range.getBoundingClientRect();
+    if (rect.width === 0 && rect.height === 0) { hideFormatToolbar(); return; }
+
+    formatToolbar.style.display = "flex";
+    const tbRect = formatToolbar.getBoundingClientRect();
+    let left = rect.left + (rect.width / 2) - (tbRect.width / 2);
+    let top = rect.top - tbRect.height - 8;
+    // Flip below if near top edge
+    if (top < 4) {
+      top = rect.bottom + 8;
+    }
+    // Clamp horizontal
+    if (left < 4) left = 4;
+    if (left + tbRect.width > window.innerWidth - 4) left = window.innerWidth - tbRect.width - 4;
+
+    formatToolbar.style.left = left + "px";
+    formatToolbar.style.top = top + "px";
+
+    updateFormatButtonStates();
+  }
+
+  function hideFormatToolbar() {
+    formatToolbar.style.display = "none";
+    formatSizeMenu.style.display = "none";
+    hideLinkPopover();
+  }
+
+  function hideLinkPopover() {
+    linkPopover.style.display = "none";
+  }
+
+  function updateFormatButtonStates() {
+    formatToolbar.querySelectorAll("button[data-command]").forEach((btn) => {
+      const cmd = btn.dataset.command;
+      if (cmd === "link") {
+        // Check if inside an <a> tag
+        const sel = window.getSelection();
+        if (sel && sel.rangeCount > 0) {
+          const node = sel.anchorNode;
+          const el = node && (node.nodeType === Node.TEXT_NODE ? node.parentElement : node);
+          btn.classList.toggle("active", !!(el && el.closest("a")));
+        }
+      } else {
+        try {
+          btn.classList.toggle("active", document.queryCommandState(cmd));
+        } catch (_) {
+          btn.classList.remove("active");
+        }
+      }
+    });
+
+    // Update size label
+    try {
+      const val = document.queryCommandValue("fontSize");
+      formatSizeLabel.textContent = SIZE_LABELS[val] || "Normal";
+      // Highlight active option in menu
+      formatSizeMenu.querySelectorAll(".format-size-option").forEach((opt) => {
+        opt.classList.toggle("active", opt.dataset.size === (val || "3"));
+      });
+    } catch (_) {
+      formatSizeLabel.textContent = "Normal";
+    }
+  }
+
+  // ─── Format Toolbar: button click handlers ──────────
+  formatToolbar.querySelectorAll("button[data-command]").forEach((btn) => {
+    btn.addEventListener("mousedown", (e) => {
+      e.preventDefault(); // preserve selection
+    });
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const cmd = btn.dataset.command;
+      if (cmd === "link") {
+        handleLinkFormat();
+      } else {
+        document.execCommand(cmd, false, null);
+        updateFormatButtonStates();
+      }
+    });
+  });
+
+  // ─── Size dropdown logic ──────────────────────────────
+  formatSizeBtn.addEventListener("mousedown", (e) => {
+    e.preventDefault(); // preserve selection
+  });
+  formatSizeBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    const isOpen = formatSizeMenu.style.display !== "none";
+    formatSizeMenu.style.display = isOpen ? "none" : "block";
+  });
+
+  formatSizeMenu.querySelectorAll(".format-size-option").forEach((opt) => {
+    opt.addEventListener("mousedown", (e) => {
+      e.preventDefault(); // preserve selection
+    });
+    opt.addEventListener("click", (e) => {
+      e.preventDefault();
+      const size = opt.dataset.size;
+      if (size === "3") {
+        // "Normal" — remove font size formatting
+        document.execCommand("removeFormat", false, null);
+      } else {
+        document.execCommand("fontSize", false, size);
+      }
+      formatSizeMenu.style.display = "none";
+      updateFormatButtonStates();
+    });
+  });
+
+  // Close size menu when clicking outside
+  document.addEventListener("mousedown", (e) => {
+    if (formatSizeMenu.style.display !== "none" &&
+        !formatSizeBtn.contains(e.target) &&
+        !formatSizeMenu.contains(e.target)) {
+      formatSizeMenu.style.display = "none";
+    }
+  });
+
+  // ─── Link popover logic ─────────────────────────────
+  function handleLinkFormat() {
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed || sel.rangeCount === 0) return;
+
+    // Save current selection
+    savedSelectionRange = sel.getRangeAt(0).cloneRange();
+
+    // Check if inside an existing <a>
+    const node = sel.anchorNode;
+    const el = node && (node.nodeType === Node.TEXT_NODE ? node.parentElement : node);
+    const existingLink = el && el.closest("a");
+
+    linkPopoverInput.value = existingLink ? existingLink.href : "https://";
+    linkPopoverRemove.style.display = existingLink ? "" : "none";
+
+    // Position below toolbar
+    const tbRect = formatToolbar.getBoundingClientRect();
+    linkPopover.style.display = "flex";
+    const lpRect = linkPopover.getBoundingClientRect();
+    let left = tbRect.left + (tbRect.width / 2) - (lpRect.width / 2);
+    let top = tbRect.bottom + 6;
+    if (left < 4) left = 4;
+    if (left + lpRect.width > window.innerWidth - 4) left = window.innerWidth - lpRect.width - 4;
+    linkPopover.style.left = left + "px";
+    linkPopover.style.top = top + "px";
+
+    linkPopoverInput.focus();
+    linkPopoverInput.select();
+  }
+
+  function applyLink() {
+    const url = linkPopoverInput.value.trim();
+    if (!url) return;
+
+    // Restore saved selection
+    if (savedSelectionRange) {
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(savedSelectionRange);
+    }
+
+    document.execCommand("createLink", false, url);
+
+    // Set target="_blank" on newly created link
+    const sel = window.getSelection();
+    if (sel && sel.rangeCount > 0) {
+      const node = sel.anchorNode;
+      const el = node && (node.nodeType === Node.TEXT_NODE ? node.parentElement : node);
+      const link = el && el.closest("a");
+      if (link) link.setAttribute("target", "_blank");
+    }
+
+    hideLinkPopover();
+    savedSelectionRange = null;
+  }
+
+  function removeLink() {
+    // Restore saved selection
+    if (savedSelectionRange) {
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(savedSelectionRange);
+    }
+    document.execCommand("unlink", false, null);
+    hideLinkPopover();
+    savedSelectionRange = null;
+  }
+
+  linkPopoverApply.addEventListener("mousedown", (e) => e.preventDefault());
+  linkPopoverApply.addEventListener("click", applyLink);
+
+  linkPopoverRemove.addEventListener("mousedown", (e) => e.preventDefault());
+  linkPopoverRemove.addEventListener("click", removeLink);
+
+  linkPopoverInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      applyLink();
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      hideLinkPopover();
+    }
+  });
+
+  // Hide link popover when clicking outside
+  document.addEventListener("mousedown", (e) => {
+    if (linkPopover.style.display !== "none" &&
+        !linkPopover.contains(e.target) &&
+        !formatToolbar.contains(e.target)) {
+      hideLinkPopover();
+    }
   });
 
   // ─── Toolbar actions ──────────────────────────────────
@@ -676,6 +926,18 @@
       selectedId = null;
       render();
     }
+
+    // Ctrl/Cmd+K → open link popover
+    if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+      const active = document.activeElement;
+      if (active && active.isContentEditable && canvas.contains(active)) {
+        const sel = window.getSelection();
+        if (sel && !sel.isCollapsed) {
+          e.preventDefault();
+          handleLinkFormat();
+        }
+      }
+    }
   });
 
   // ─── Image utilities ─────────────────────────────────
@@ -788,10 +1050,10 @@
   <![endif]-->
   <title>Newsletter</title>
 </head>
-<body style="margin:0; padding:0; background-color:#f5f5f5; font-family:${FONT} !important; -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%;">
-  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#f5f5f5; ${MSO_FIX}">
+<body style="margin:0; padding:0; font-family:${FONT} !important; -webkit-text-size-adjust:100%; -ms-text-size-adjust:100%;">
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="${MSO_FIX}">
     <tr>
-      <td align="center" valign="top" style="padding:20px 0;">
+      <td align="center" valign="top">
 
         <!--[if mso]>
         <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" align="center">
@@ -837,7 +1099,6 @@ ${bodyRows}
           <!-- TEXT BLOCK -->
           <tr>
             <td style="padding:24px 40px; font-family:${FONT} !important; mso-line-height-rule:exactly;">
-              <h2 style="margin:0 0 10px 0; font-family:${FONT} !important; font-size:20px; font-weight:600; color:#000000; line-height:26px; mso-line-height-rule:exactly;">${exportRichText(d.heading, 20)}</h2>
               <p style="margin:0; font-family:${FONT} !important; font-size:15px; color:#333333; line-height:25px; mso-line-height-rule:exactly;">${exportRichText(d.body, 15)}</p>
             </td>
           </tr>`;
@@ -1059,10 +1320,37 @@ ${bodyRows}
             }
             walk(child);
           } else if (tag === "i" && isPhosphorIcon(child)) {
+            // Phosphor icon — preserve (checked before italic <i>)
             const classes = [...child.classList].filter(
               (c) => c === "ph" || c.startsWith("ph-")
             );
             result += '<i class="' + classes.join(" ") + '"></i>';
+          } else if (tag === "b" || tag === "strong") {
+            result += "<b>";
+            walk(child);
+            result += "</b>";
+          } else if (tag === "i" || tag === "em") {
+            result += "<i>";
+            walk(child);
+            result += "</i>";
+          } else if (tag === "u") {
+            result += "<u>";
+            walk(child);
+            result += "</u>";
+          } else if (tag === "s" || tag === "strike") {
+            result += "<s>";
+            walk(child);
+            result += "</s>";
+          } else if (tag === "a") {
+            const href = child.getAttribute("href") || "";
+            result += '<a href="' + escAttr(href) + '">';
+            walk(child);
+            result += "</a>";
+          } else if (tag === "font" && child.getAttribute("size")) {
+            const size = child.getAttribute("size");
+            result += '<font size="' + escAttr(size) + '">';
+            walk(child);
+            result += "</font>";
           } else {
             // Strip tag, keep children
             walk(child);
@@ -1104,6 +1392,11 @@ ${bodyRows}
           '" style="display:inline; vertical-align:-0.125em; width:' + iconSize + 'px; height:' + iconSize + 'px; margin:0 1px;" />'
         );
       })
+      .replace(/<font size="(\d)">([\s\S]*?)<\/font>/g, function (match, size, inner) {
+        var px = {"1":10,"2":13,"3":16,"4":18,"5":24,"6":32}[size] || 16;
+        return '<span style="font-size:' + px + 'px;">' + inner + '</span>';
+      })
+      .replace(/<a href="([^"]*)">/g, '<a href="$1" target="_blank" style="color:#0066cc; text-decoration:underline;">')
       .replace(/<br>/g, "<br />");
   }
 
