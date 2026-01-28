@@ -7,8 +7,36 @@
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css" />
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css" />
   <link rel="stylesheet" href="editor.css" />
+  <link rel="stylesheet" href="src/auth.css" />
 </head>
 <body>
+
+  <!-- ===== AUTH SCREEN ===== -->
+  <div id="auth-screen" class="hidden">
+    <div class="auth-card">
+      <h1>Newsletter Editor</h1>
+      <p class="auth-subtitle">Sign in to save and manage your templates</p>
+      <form id="auth-form" autocomplete="on">
+        <div class="auth-field">
+          <label for="auth-email">Email</label>
+          <input id="auth-email" type="email" required autocomplete="email" placeholder="you@example.com" />
+        </div>
+        <div class="auth-field">
+          <label for="auth-password">Password</label>
+          <input id="auth-password" type="password" required autocomplete="current-password" minlength="6" placeholder="Min 6 characters" />
+        </div>
+        <button id="auth-submit" class="auth-submit" type="submit">Sign In</button>
+      </form>
+      <div id="auth-error" class="auth-error"></div>
+      <div id="auth-confirmation" class="auth-confirmation hidden">
+        Check your email for a confirmation link, then sign in.
+      </div>
+      <button id="auth-toggle" class="auth-toggle">Don't have an account? Sign Up</button>
+    </div>
+  </div>
+
+  <!-- ===== EDITOR SCREEN ===== -->
+  <div id="editor-screen" class="hidden">
 
   <!-- ===== TOP BAR ===== -->
   <header class="topbar">
@@ -19,6 +47,11 @@
       <button id="btn-preview" class="btn btn--outline" title="Preview in new tab"><i class="ph ph-eye"></i> Preview</button>
       <button id="btn-copy" class="btn btn--outline" title="Copy HTML to clipboard"><i class="ph ph-clipboard-text"></i> Copy HTML</button>
       <button id="btn-download" class="btn btn--primary" title="Download .html file"><i class="ph ph-download-simple"></i> Download</button>
+      <span class="topbar-sep"></span>
+      <div class="topbar-user">
+        <span id="user-email" class="topbar-email"></span>
+        <button id="btn-signout">Sign Out</button>
+      </div>
     </div>
   </header>
 
@@ -28,8 +61,9 @@
     <!-- Sidebar: Block Palette -->
     <aside class="sidebar">
       <div class="sidebar-tabs">
-        <button class="sidebar-tab active" data-panel="blocks">Blocks</button>
-        <button class="sidebar-tab" data-panel="icons"><i class="ph ph-compass"></i> Icons</button>
+        <button class="sidebar-tab active" data-panel="blocks" title="Blocks"><i class="ph ph-squares-four"></i></button>
+        <button class="sidebar-tab" data-panel="icons" title="Icons"><i class="ph ph-compass"></i></button>
+        <button class="sidebar-tab" data-panel="templates" title="Templates"><i class="ph ph-folder-simple"></i></button>
       </div>
 
       <!-- Blocks Panel -->
@@ -103,6 +137,20 @@
         <div id="icon-grid" class="icon-grid"></div>
         <div id="icon-status" class="icon-status">Click this tab to load icons</div>
       </div>
+
+      <!-- Templates Panel -->
+      <div class="sidebar-panel hidden" id="panel-templates">
+        <div class="tpl-controls">
+          <input id="template-name" class="tpl-name-input" type="text" placeholder="Template name..." />
+          <div class="tpl-btn-row">
+            <button id="btn-save-template" class="tpl-btn tpl-btn--save">Save</button>
+            <button id="btn-new-template" class="tpl-btn tpl-btn--new">New</button>
+          </div>
+        </div>
+        <div id="template-list" class="tpl-list">
+          <div class="tpl-empty">Sign in to see your templates</div>
+        </div>
+      </div>
     </aside>
 
     <!-- Canvas -->
@@ -169,6 +217,9 @@
     <button id="link-popover-remove" class="btn btn--sm" style="color:#c00; border:1px solid #ddd;">Remove</button>
   </div>
 
+  </div><!-- /editor-screen -->
+
   <script src="app.js"></script>
+  <script type="module" src="src/auth.js"></script>
 </body>
 </html>

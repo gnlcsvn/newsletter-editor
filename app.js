@@ -1706,4 +1706,31 @@ ${bodyRows}
   }
 
   init();
+
+  // ─── EditorAPI — bridge for external modules (auth, templates) ──
+  window.EditorAPI = {
+    getBlocks() {
+      syncAllData();
+      return JSON.parse(JSON.stringify(blocks));
+    },
+    loadBlocks(newBlocks) {
+      blocks = newBlocks.map(function (cfg) {
+        var block = createBlock(cfg.type);
+        if (cfg.data) {
+          Object.keys(cfg.data).forEach(function (key) {
+            block.data[key] = cfg.data[key];
+          });
+        }
+        return block;
+      });
+      selectedId = null;
+      render();
+    },
+    clearBlocks() {
+      blocks = [];
+      selectedId = null;
+      render();
+    },
+    showToast: showToast,
+  };
 })();
