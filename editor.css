@@ -398,6 +398,59 @@ body {
   min-height: 24px;
 }
 
+/* --- Side Image Layout (Text & Quote blocks) --- */
+.b-side-image-layout {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.b-side-image-col {
+  width: 120px;
+  min-width: 120px;
+  flex-shrink: 0;
+}
+
+.b-side-image-preview {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  display: block;
+}
+
+.b-side-text-col {
+  flex: 1;
+  min-width: 0;
+}
+
+.b-side-image-actions {
+  display: flex;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.b-side-image-radius-btn,
+.b-side-image-remove-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  color: #666;
+  font-size: 14px;
+  padding: 0;
+  transition: border-color 0.12s, color 0.12s;
+}
+
+.b-side-image-radius-btn:hover,
+.b-side-image-remove-btn:hover {
+  border-color: #000;
+  color: #000;
+}
+
 /* --- Block Type: Heading --- */
 .b-heading {
   padding: 24px 40px 8px;

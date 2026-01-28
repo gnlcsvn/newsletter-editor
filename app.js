@@ -41,6 +41,8 @@
     }),
     text: () => ({
       body: '<font size="4"><b>Section Heading</b></font><br>Write your paragraph text here. Click to edit this content and replace it with your newsletter copy.',
+      sideImage: "",
+      sideImageRound: false,
     }),
     heading: () => ({
       text: "Section Heading",
@@ -70,6 +72,8 @@
     quote: () => ({
       text: "This is a highlighted quote or important message that you want readers to notice.",
       attribution: "— Attribution",
+      sideImage: "",
+      sideImageRound: false,
     }),
     button: () => ({
       label: "Learn More",
@@ -104,6 +108,7 @@
     down: '<i class="ph-bold ph-caret-down"></i>',
     dup: '<i class="ph-bold ph-copy"></i>',
     del: '<i class="ph-bold ph-trash"></i>',
+    img: '<i class="ph-bold ph-image"></i>',
   };
 
   // ─── Render Canvas ────────────────────────────────────
@@ -128,6 +133,7 @@
         `<button data-action="up" title="Move up">${ICO.up}</button>` +
         `<button data-action="down" title="Move down">${ICO.down}</button>` +
         `<button data-action="dup" title="Duplicate">${ICO.dup}</button>` +
+        ((block.type === "text" || block.type === "quote") ? `<button data-action="side-image" title="Add side image">${ICO.img}</button>` : "") +
         `<button data-action="del" title="Delete">${ICO.del}</button>`;
       el.appendChild(tb);
 
@@ -159,8 +165,25 @@
 
       case "text":
         wrap.className = "b-text";
-        wrap.innerHTML =
-          `<div class="b-text-body" contenteditable="true" data-field="body">${d.body}</div>`;
+        if (d.sideImage) {
+          const radius = d.sideImageRound ? "50%" : "0";
+          wrap.innerHTML =
+            `<div class="b-side-image-layout">` +
+              `<div class="b-side-image-col">` +
+                `<img class="b-side-image-preview" src="${escAttr(d.sideImage)}" alt="" style="border-radius:${radius};" />` +
+                `<div class="b-side-image-actions">` +
+                  `<button class="b-side-image-radius-btn" type="button" title="Toggle round/square"><i class="ph ph-${d.sideImageRound ? "square" : "circle"}"></i></button>` +
+                  `<button class="b-side-image-remove-btn" type="button" title="Remove side image"><i class="ph ph-x"></i></button>` +
+                `</div>` +
+              `</div>` +
+              `<div class="b-side-text-col">` +
+                `<div class="b-text-body" contenteditable="true" data-field="body">${d.body}</div>` +
+              `</div>` +
+            `</div>`;
+        } else {
+          wrap.innerHTML =
+            `<div class="b-text-body" contenteditable="true" data-field="body">${d.body}</div>`;
+        }
         break;
 
       case "heading":
@@ -254,11 +277,31 @@
 
       case "quote":
         wrap.className = "b-quote";
-        wrap.innerHTML =
-          `<div class="b-quote-inner">` +
-          `<div class="b-quote-text" contenteditable="true" data-field="text">${d.text}</div>` +
-          `<div class="b-quote-attr" contenteditable="true" data-field="attribution">${d.attribution}</div>` +
-          `</div>`;
+        if (d.sideImage) {
+          const radius = d.sideImageRound ? "50%" : "0";
+          wrap.innerHTML =
+            `<div class="b-side-image-layout">` +
+              `<div class="b-side-image-col">` +
+                `<img class="b-side-image-preview" src="${escAttr(d.sideImage)}" alt="" style="border-radius:${radius};" />` +
+                `<div class="b-side-image-actions">` +
+                  `<button class="b-side-image-radius-btn" type="button" title="Toggle round/square"><i class="ph ph-${d.sideImageRound ? "square" : "circle"}"></i></button>` +
+                  `<button class="b-side-image-remove-btn" type="button" title="Remove side image"><i class="ph ph-x"></i></button>` +
+                `</div>` +
+              `</div>` +
+              `<div class="b-side-text-col">` +
+                `<div class="b-quote-inner">` +
+                  `<div class="b-quote-text" contenteditable="true" data-field="text">${d.text}</div>` +
+                  `<div class="b-quote-attr" contenteditable="true" data-field="attribution">${d.attribution}</div>` +
+                `</div>` +
+              `</div>` +
+            `</div>`;
+        } else {
+          wrap.innerHTML =
+            `<div class="b-quote-inner">` +
+            `<div class="b-quote-text" contenteditable="true" data-field="text">${d.text}</div>` +
+            `<div class="b-quote-attr" contenteditable="true" data-field="attribution">${d.attribution}</div>` +
+            `</div>`;
+        }
         break;
 
       case "button":
@@ -517,6 +560,40 @@
           block.data.naturalHeight = img.naturalHeight;
         }
       }
+    });
+
+    // ── Side-image handlers (text / quote blocks) ──────
+    canvas.querySelectorAll(".b-side-image-radius-btn").forEach((btn) => {
+      btn.addEventListener("mousedown", (e) => {
+        e.stopPropagation();
+        btn.closest(".block").setAttribute("draggable", "false");
+      });
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        btn.closest(".block").setAttribute("draggable", "true");
+        const blockEl = btn.closest(".block");
+        const block = blocks.find((b) => b.id === blockEl.dataset.id);
+        if (!block) return;
+        block.data.sideImageRound = !block.data.sideImageRound;
+        render();
+      });
+    });
+
+    canvas.querySelectorAll(".b-side-image-remove-btn").forEach((btn) => {
+      btn.addEventListener("mousedown", (e) => {
+        e.stopPropagation();
+        btn.closest(".block").setAttribute("draggable", "false");
+      });
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        btn.closest(".block").setAttribute("draggable", "true");
+        const blockEl = btn.closest(".block");
+        const block = blocks.find((b) => b.id === blockEl.dataset.id);
+        if (!block) return;
+        block.data.sideImage = "";
+        block.data.sideImageRound = false;
+        render();
+      });
     });
 
     // Drag & Drop
@@ -825,6 +902,23 @@
         blocks.splice(idx, 1);
         if (selectedId === id) selectedId = null;
         break;
+      case "side-image": {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "image/*";
+        input.addEventListener("change", () => {
+          const file = input.files[0];
+          if (!file) return;
+          readFileAsDataURL(file).then((dataUrl) => {
+            const block = blocks.find((b) => b.id === id);
+            if (!block) return;
+            block.data.sideImage = dataUrl;
+            render();
+          });
+        });
+        input.click();
+        return; // async — don't call render() synchronously
+      }
     }
     render();
   }
@@ -1003,19 +1097,65 @@
     });
   }
 
+  function cropSideImage(dataUrl, isRound) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const size = 120;
+        const natW = img.naturalWidth;
+        const natH = img.naturalHeight;
+
+        // Center-crop to square (object-fit:cover logic)
+        const scale = Math.max(size / natW, size / natH);
+        const srcW = size / scale;
+        const srcH = size / scale;
+        const srcX = (natW - srcW) / 2;
+        const srcY = (natH - srcH) / 2;
+
+        const cvs = document.createElement("canvas");
+        cvs.width = size;
+        cvs.height = size;
+        const ctx = cvs.getContext("2d");
+
+        if (isRound) {
+          ctx.beginPath();
+          ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+          ctx.closePath();
+          ctx.clip();
+        }
+
+        ctx.drawImage(img, srcX, srcY, srcW, srcH, 0, 0, size, size);
+        resolve(cvs.toDataURL("image/png"));
+      };
+      img.onerror = () => reject(new Error("Failed to load side image for cropping"));
+      img.src = dataUrl;
+    });
+  }
+
   async function prepareExport() {
     const promises = blocks.map(async (block) => {
-      if (block.type !== "image") return;
-      delete block.data._exportSrc;
-      const d = block.data;
-      if (d.cropHeight > 0 && d.url && d.url.startsWith("data:") && d.naturalWidth && d.naturalHeight) {
+      if (block.type === "image") {
+        delete block.data._exportSrc;
+        const d = block.data;
+        if (d.cropHeight > 0 && d.url && d.url.startsWith("data:") && d.naturalWidth && d.naturalHeight) {
+          try {
+            d._exportSrc = await cropImageViaCanvas(
+              d.url, d.cropHeight, d.objectPosition,
+              d.naturalWidth, d.naturalHeight
+            );
+          } catch (e) {
+            console.warn("Image crop failed for block " + block.id, e);
+          }
+        }
+      }
+      if ((block.type === "text" || block.type === "quote") && block.data.sideImage) {
+        delete block.data._exportSideImage;
         try {
-          d._exportSrc = await cropImageViaCanvas(
-            d.url, d.cropHeight, d.objectPosition,
-            d.naturalWidth, d.naturalHeight
+          block.data._exportSideImage = await cropSideImage(
+            block.data.sideImage, block.data.sideImageRound
           );
         } catch (e) {
-          console.warn("Image crop failed for block " + block.id, e);
+          console.warn("Side image crop failed for block " + block.id, e);
         }
       }
     });
@@ -1095,6 +1235,25 @@ ${bodyRows}
           </tr>`;
 
       case "text":
+        if (d.sideImage) {
+          const sideImgSrc = d._exportSideImage || d.sideImage;
+          return `
+          <!-- TEXT BLOCK (with side image) -->
+          <tr>
+            <td style="padding:24px 40px; font-family:${FONT} !important; mso-line-height-rule:exactly;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="${MSO_FIX}">
+                <tr>
+                  <td width="120" valign="top" style="width:120px; padding-right:20px;">
+                    <img src="${escAttr(sideImgSrc)}" alt="" width="120" height="120" style="display:block; width:120px; height:120px;" />
+                  </td>
+                  <td valign="top" style="font-family:${FONT} !important; mso-line-height-rule:exactly;">
+                    <p style="margin:0; font-family:${FONT} !important; font-size:15px; color:#333333; line-height:25px; mso-line-height-rule:exactly;">${exportRichText(d.body, 15)}</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>`;
+        }
         return `
           <!-- TEXT BLOCK -->
           <tr>
@@ -1232,6 +1391,33 @@ ${bodyRows}
           </tr>`;
 
       case "quote":
+        if (d.sideImage) {
+          const sideImgSrc = d._exportSideImage || d.sideImage;
+          return `
+          <!-- QUOTE (with side image) -->
+          <tr>
+            <td style="padding:20px 40px;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="${MSO_FIX}">
+                <tr>
+                  <td width="120" valign="top" style="width:120px; padding-right:20px;">
+                    <img src="${escAttr(sideImgSrc)}" alt="" width="120" height="120" style="display:block; width:120px; height:120px;" />
+                  </td>
+                  <td valign="top">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="${MSO_FIX}">
+                      <tr>
+                        <td width="3" style="background-color:#000000; width:3px; font-size:1px; line-height:1px; mso-line-height-rule:exactly;">&nbsp;</td>
+                        <td style="padding:12px 20px; font-family:${FONT} !important; mso-line-height-rule:exactly;">
+                          <p style="margin:0; font-family:${FONT} !important; font-size:16px; color:#333333; line-height:26px; font-style:italic; mso-line-height-rule:exactly;">${exportRichText(d.text, 16)}</p>
+                          <p style="margin:8px 0 0 0; font-family:${FONT} !important; font-size:13px; color:#666666; line-height:18px; mso-line-height-rule:exactly;">${exportRichText(d.attribution, 13)}</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>`;
+        }
         return `
           <!-- QUOTE -->
           <tr>
@@ -1419,7 +1605,7 @@ ${bodyRows}
   document.getElementById("btn-preview").addEventListener("click", async () => {
     await prepareExport();
     const html = generateHTML();
-    blocks.forEach((b) => { delete b.data._exportSrc; });
+    blocks.forEach((b) => { delete b.data._exportSrc; delete b.data._exportSideImage; });
     const win = window.open("", "_blank");
     win.document.write(html);
     win.document.close();
@@ -1429,7 +1615,7 @@ ${bodyRows}
   document.getElementById("btn-copy").addEventListener("click", async () => {
     await prepareExport();
     const html = generateHTML();
-    blocks.forEach((b) => { delete b.data._exportSrc; });
+    blocks.forEach((b) => { delete b.data._exportSrc; delete b.data._exportSideImage; });
     navigator.clipboard.writeText(html).then(() => {
       showToast("HTML copied to clipboard");
     });
@@ -1439,7 +1625,7 @@ ${bodyRows}
   document.getElementById("btn-download").addEventListener("click", async () => {
     await prepareExport();
     const html = generateHTML();
-    blocks.forEach((b) => { delete b.data._exportSrc; });
+    blocks.forEach((b) => { delete b.data._exportSrc; delete b.data._exportSideImage; });
     const blob = new Blob([html], { type: "text/html" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
