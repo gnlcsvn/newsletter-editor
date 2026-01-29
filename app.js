@@ -1278,7 +1278,7 @@ ${bodyRows}
             <td style="padding:8px 40px;">
               <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="${MSO_FIX}">
                 <tr>
-                  <td bgcolor="#000000" height="2" width="100%" style="background-color:#000000; height:2px; width:100%; line-height:2px; font-size:2px; mso-line-height-rule:exactly;">&nbsp;</td>
+                  <td bgcolor="#000000" height="1" width="100%" style="background-color:#000000; height:1px; width:100%; line-height:1px; font-size:1px; mso-line-height-rule:exactly;">&nbsp;</td>
                 </tr>
               </table>
             </td>
