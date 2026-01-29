@@ -1451,7 +1451,8 @@ ${bodyRows}
 
       case "icon": {
         const imgSize = d.size || 32;
-        const svgUrl = "https://cdn.jsdelivr.net/npm/@phosphor-icons/core@2.1.1/assets/regular/" + encodeURIComponent(d.name) + ".svg";
+        // Use weserv.nl proxy to convert SVG to PNG for email client compatibility
+        const pngUrl = "https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@phosphor-icons/core@2.1.1/assets/regular/" + encodeURIComponent(d.name) + ".svg&output=png";
         const labelHtml = d.label
           ? `\n              <p style="margin:8px 0 0 0; font-family:${FONT} !important; font-size:13px; color:#333333; line-height:18px; mso-line-height-rule:exactly;">${exportRichText(d.label, 13)}</p>`
           : "";
@@ -1459,7 +1460,7 @@ ${bodyRows}
           <!-- ICON: ${esc(d.name)} -->
           <tr>
             <td align="center" style="padding:20px 40px; font-family:${FONT} !important; mso-line-height-rule:exactly;">
-              <img src="${svgUrl}" width="${imgSize}" height="${imgSize}" alt="${esc(d.name)}" style="display:block; width:${imgSize}px; height:${imgSize}px;" />${labelHtml}
+              <img src="${pngUrl}" width="${imgSize}" height="${imgSize}" alt="${esc(d.name)}" style="display:block; width:${imgSize}px; height:${imgSize}px;" />${labelHtml}
             </td>
           </tr>`;
       }
@@ -1566,13 +1567,14 @@ ${bodyRows}
     var iconSize = Math.round((fontSize || 15) * 1.15);
     return html
       .replace(/<i class="ph ph-([\w-]+)"><\/i>/g, function (match, name) {
-        var svgUrl =
-          "https://cdn.jsdelivr.net/npm/@phosphor-icons/core@2.1.1/assets/regular/" +
+        // Use weserv.nl proxy to convert SVG to PNG for email client compatibility
+        var pngUrl =
+          "https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@phosphor-icons/core@2.1.1/assets/regular/" +
           encodeURIComponent(name) +
-          ".svg";
+          ".svg&output=png";
         return (
           '<img src="' +
-          svgUrl +
+          pngUrl +
           '" width="' + iconSize + '" height="' + iconSize + '" alt="' +
           esc(name) +
           '" style="display:inline; vertical-align:-0.125em; width:' + iconSize + 'px; height:' + iconSize + 'px; margin:0 1px;" />'
