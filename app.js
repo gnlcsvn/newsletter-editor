@@ -1582,7 +1582,7 @@ ${bodyRows}
         var px = {"1":10,"2":13,"3":16,"4":18,"5":24,"6":32}[size] || 16;
         return '<span style="font-size:' + px + 'px;">' + inner + '</span>';
       })
-      .replace(/<a href="([^"]*)">/g, '<a href="$1" target="_blank" style="color:#0066cc; text-decoration:underline;">')
+      .replace(/<a href="([^"]*)">([\s\S]*?)<\/a>/g, '<a href="$1" target="_blank" style="color:#0066cc; text-decoration:underline;"><span>$2</span></a>')
       .replace(/<br>/g, "<br />");
   }
 
