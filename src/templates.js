@@ -134,6 +134,7 @@ async function loadTemplateList() {
         </div>
         <div class="tpl-item-actions">
           <button class="tpl-load-btn" data-id="${t.id}" title="Load template">Load</button>
+          <button class="tpl-dup-btn" data-id="${t.id}" title="Duplicate template"><i class="ph ph-copy"></i></button>
           <button class="tpl-delete-btn" data-id="${t.id}" title="Delete template"><i class="ph ph-trash"></i></button>
         </div>
       </div>`;
@@ -143,6 +144,11 @@ async function loadTemplateList() {
   // Bind load buttons
   templateList.querySelectorAll(".tpl-load-btn").forEach((btn) => {
     btn.addEventListener("click", () => loadTemplate(btn.dataset.id));
+  });
+
+  // Bind duplicate buttons
+  templateList.querySelectorAll(".tpl-dup-btn").forEach((btn) => {
+    btn.addEventListener("click", () => duplicateTemplate(btn.dataset.id));
   });
 
   // Bind delete buttons
@@ -169,6 +175,40 @@ async function loadTemplate(id) {
   window.EditorAPI.loadBlocks(data.blocks);
   highlightActive();
   window.EditorAPI.showToast('Loaded "' + data.name + '"');
+}
+
+// --- Duplicate a template ---
+async function duplicateTemplate(id) {
+  if (!currentUser) return;
+
+  const { data, error } = await supabase
+    .from("templates")
+    .select("name, blocks")
+    .eq("id", id)
+    .single();
+
+  if (error || !data) {
+    window.EditorAPI.showToast("Failed to duplicate template");
+    return;
+  }
+
+  const newName = "Copy of " + data.name;
+
+  const { error: insertError } = await supabase
+    .from("templates")
+    .insert({
+      user_id: currentUser.id,
+      name: newName,
+      blocks: data.blocks,
+    });
+
+  if (insertError) {
+    window.EditorAPI.showToast("Duplicate failed: " + insertError.message);
+    return;
+  }
+
+  window.EditorAPI.showToast('Duplicated "' + data.name + '"');
+  loadTemplateList();
 }
 
 // --- Delete a template ---
