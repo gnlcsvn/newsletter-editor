@@ -1452,7 +1452,7 @@ ${bodyRows}
       case "icon": {
         const imgSize = d.size || 32;
         // Use weserv.nl proxy to convert SVG to PNG for email client compatibility
-        const pngUrl = "https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@phosphor-icons/core@2.1.1/assets/duotone/" + encodeURIComponent(d.name) + ".svg&output=png";
+        const pngUrl = "https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@phosphor-icons/core@2.1.1/assets/duotone/" + encodeURIComponent(d.name) + "-duotone.svg&output=png";
         const labelHtml = d.label
           ? `\n              <p style="margin:8px 0 0 0; font-family:${FONT} !important; font-size:13px; color:#333333; line-height:18px; mso-line-height-rule:exactly;">${exportRichText(d.label, 13)}</p>`
           : "";
@@ -1571,7 +1571,7 @@ ${bodyRows}
         var pngUrl =
           "https://images.weserv.nl/?url=cdn.jsdelivr.net/npm/@phosphor-icons/core@2.1.1/assets/duotone/" +
           encodeURIComponent(name) +
-          ".svg&output=png";
+          "-duotone.svg&output=png";
         return (
           '<img src="' +
           pngUrl +
