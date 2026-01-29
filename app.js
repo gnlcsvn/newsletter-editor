@@ -1101,7 +1101,8 @@
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.onload = () => {
-        const size = 120;
+        // Use 2x resolution (240px) for retina displays, displayed at 120px
+        const size = 240;
         const natW = img.naturalWidth;
         const natH = img.naturalHeight;
 
@@ -1116,6 +1117,10 @@
         cvs.width = size;
         cvs.height = size;
         const ctx = cvs.getContext("2d");
+
+        // Enable high-quality image scaling
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = "high";
 
         if (isRound) {
           ctx.beginPath();
